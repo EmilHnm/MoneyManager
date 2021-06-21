@@ -125,7 +125,7 @@ public class WalletFilterActivity extends AppCompatActivity{
                 at_time = "";
                 before_time = "";
                 after_time = data.getStringExtra("result");
-                tv_range_time.setText("Sau " + sp_more_than_money + "đ");
+                tv_range_time.setText("Sau " + sp_more_than_money);
             }break;
             case 2: {
                 after_time = "";
