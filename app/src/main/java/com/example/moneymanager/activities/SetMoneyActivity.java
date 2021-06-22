@@ -55,6 +55,7 @@ public class SetMoneyActivity extends AppCompatActivity {
 
                     //Lưu số tiền nhập
                     transactionEditor.putInt(SharedPrefConstant.WALLET_MONEY, Integer.parseInt(money));
+                    transactionEditor.putInt(SharedPrefConstant.WALLET_MONEY_DEFAULT, Integer.parseInt(money));
                     //Lưu đã nhập tiền lần đầu
                     transactionEditor.putBoolean(SharedPrefConstant.WALLET_IS_SET_MONEY, true);
                     transactionEditor.apply();

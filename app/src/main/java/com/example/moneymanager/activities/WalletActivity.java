@@ -1,11 +1,13 @@
 package com.example.moneymanager.activities;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -167,7 +169,6 @@ public class WalletActivity extends AppCompatActivity implements DatePickerDialo
         String username = sharedPreferencesSigningIn.getString(SharedPrefConstant.SIGNING_IN_USERNAME, "");
         SharedPreferences sharedPreferencesTransaction = getSharedPreferences(username, MODE_PRIVATE);
         int totalTransactions = sharedPreferencesTransaction.getInt(SharedPrefConstant.TRANSACTION_TOTAL, 0);
-
         //Xoá hết item trong list hiện tại để hiện list theo ngày
         transactions.clear();
 

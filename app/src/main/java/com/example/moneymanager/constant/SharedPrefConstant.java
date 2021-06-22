@@ -34,6 +34,7 @@ public class SharedPrefConstant {
     public static final String TRANSACTION_DATE = "date";
     public static final String TRANSACTION_NOTE = "note";
     public static final String WALLET_MONEY = "walletMoney";
+    public static final String WALLET_MONEY_DEFAULT = "walletMoneyDefault";
     public static final String WALLET_IS_SET_MONEY = "walletIsSetMoney";
 }
 
