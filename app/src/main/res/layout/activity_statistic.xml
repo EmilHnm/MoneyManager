@@ -186,13 +186,14 @@
                             android:textColor="@color/black" />
 
                         <TextView
+                            android:id="@+id/statistic_tv_revenue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="TextView"
                             android:textColor="@color/teal_200" />
 
                         <com.github.mikephil.charting.charts.PieChart
-                            android:id="@+id/piechart1"
+                            android:id="@+id/statistic_pc_revenue"
                             android:layout_width="match_parent"
                             android:layout_height="200dp"
                             android:layout_marginTop="20dp" />
@@ -212,13 +213,14 @@
                             android:textColor="@color/black" />
 
                         <TextView
+                            android:id="@+id/statistic_tv_expenditure"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="TextView"
                             android:textColor="@color/red_form_error" />
 
                         <com.github.mikephil.charting.charts.PieChart
-                            android:id="@+id/piechart2"
+                            android:id="@+id/statistic_pc_expenditure"
                             android:layout_width="match_parent"
                             android:layout_height="200dp"
                             android:layout_marginTop="20dp" />
