@@ -35,6 +35,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,21 +47,23 @@ public class StatisticActivity extends AppCompatActivity{
     BottomNavigationView bnv_menu;
     FloatingActionButton fab_add_transaction;
     TextView tv_first_surplus, tv_latest_surplus, tv_time_picker_print,
-            tv_revenue, tv_expenditure;
+            tv_revenue, tv_expenditure,
+            tv_wallet_name, tv_wallet_money;
     LinearLayout ll_time_picker;
     MonthYearPickerDialogFragment dialogFragment;
 
-
     PieChart pc_revenue, pc_expenditure;
 
+    //Tạo mảng chúa giá trị giao dịch
     int expenditure_value[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     int revenue_value[] = {0,0,0,0,0,0};
-
+    //Tạo mảng chúa giá trị màu giao dịch
     int expenditure_color[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     int revenue_color[] = {0,0,0,0,0,0};
-
+    //Tạo mảng chúa tên giao dịch
     String expenditure_title[] = {"","","","","","","","","","","","","","","","","","","","",""};
     String revenue_title[] = {"","","","","",""};
+
     int yearSelected;
     int monthSelected;
     int revenue, expenditure;
@@ -76,17 +79,47 @@ public class StatisticActivity extends AppCompatActivity{
         tv_expenditure = findViewById(R.id.statistic_tv_expenditure);
         pc_revenue = findViewById(R.id.statistic_pc_revenue);
         pc_expenditure = findViewById(R.id.statistic_pc_expenditure);
+        tv_wallet_name = findViewById(R.id.statistic_tv_wallet_name);
+        tv_wallet_money = findViewById(R.id.statistic_tv_money);
 
     }
 
+    private void displayUserInformation(){
+        //Lấy file người dùng đang đăng nhập
+        SharedPreferences sharedPreferenceSigningIn = getSharedPreferences(SharedPrefConstant.SIGNING_IN, MODE_PRIVATE);
+        //Set tên ví
+        String walletName = sharedPreferenceSigningIn.getString(SharedPrefConstant.SIGNING_IN_WALLET_NAME, "");
+        tv_wallet_name.setText(walletName);
+
+        //Set số tiền trong ví
+        String username = sharedPreferenceSigningIn.getString(SharedPrefConstant.SIGNING_IN_USERNAME, "");
+        SharedPreferences sharedPreferencesTransaction = getSharedPreferences(username, MODE_PRIVATE);
+        int money = sharedPreferencesTransaction.getInt(SharedPrefConstant.WALLET_MONEY, 0);
+
+        //Set màu tiền
+        if(money > 0)
+            tv_wallet_money.setTextColor(getResources().getColor(R.color.green_main));
+        else
+            tv_wallet_money.setTextColor(getResources().getColor(R.color.red_form_error));
+
+        //Format tiền từ 100000 thành 100.000 đ
+        DecimalFormat decimalFormat = new DecimalFormat("###,###");
+        String formattedMoney = decimalFormat.format(money);
+
+        tv_wallet_money.setText(formattedMoney + " đ");
+    }
 
     private void setDateLitener() {
         Calendar calendar = Calendar.getInstance();
         yearSelected = calendar.get(Calendar.YEAR);
         monthSelected = calendar.get(Calendar.MONTH);
+        //Đặt tiêu đề
         String customTitle = "Chọn thời gian";
+        //Đặt ngôn ngữ
         Locale locale = new Locale("vi");
+        //Đặt dạng hiển thị tháng
         MonthFormat monthFormat = MonthFormat.LONG;
+        //Tạo lịch
         dialogFragment = MonthYearPickerDialogFragment
                 .getInstance(monthSelected, yearSelected, customTitle, locale, monthFormat);
         dialogFragment.setOnDateSetListener(new MonthYearPickerDialog.OnDateSetListener() {
@@ -94,8 +127,10 @@ public class StatisticActivity extends AppCompatActivity{
             public void onDateSet(int year, int monthOfYear) {
                 tv_time_picker_print.setText((monthOfYear+1) + "/ " +year);
                 try {
+                    //HIển thị chart theo tháng
                     setRevenuePieChartByDate(year, monthOfYear);
                     setExpenditurePieChartByDate(year, monthOfYear);
+                    //Hiển thị thông tin tổng quát theo tháng
                     getRevenueExpenditureByDate(year, monthOfYear);
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -149,22 +184,30 @@ public class StatisticActivity extends AppCompatActivity{
             }
         });
     }
+
     private void getWalletMoney(){
+        //Lấy thông tin người đăng nhập
         SharedPreferences sharedPreferencesSigningIn = getSharedPreferences(SharedPrefConstant.SIGNING_IN,MODE_PRIVATE);
         String userName = sharedPreferencesSigningIn.getString(SharedPrefConstant.SIGNING_IN_USERNAME, "");
         SharedPreferences sharedPreferencesTransaction = getSharedPreferences(userName,MODE_PRIVATE);
+        //Lấy số dư đầu
         int WalletMoneyDefault = sharedPreferencesTransaction.getInt(SharedPrefConstant.WALLET_MONEY_DEFAULT, 0);
+        //Lấy số dư cuối
         int WalletMoney = sharedPreferencesTransaction.getInt(SharedPrefConstant.WALLET_MONEY, 0);
         tv_first_surplus.setText(String.valueOf(WalletMoneyDefault));
         tv_latest_surplus.setText(String.valueOf(WalletMoney));
     }
 
     private void getRevenueExpenditure () {
+        //Lấy thông tin người dùng đăng nhập
         SharedPreferences sharedPreferencesSigningIn = getSharedPreferences(SharedPrefConstant.SIGNING_IN, MODE_PRIVATE);
         String username = sharedPreferencesSigningIn.getString(SharedPrefConstant.SIGNING_IN_USERNAME, "");
         SharedPreferences sharedPreferencesTransaction = getSharedPreferences(username, MODE_PRIVATE);
+
+        //Lấy tổng số giao dịch
         int totalTransactions = sharedPreferencesTransaction.getInt(SharedPrefConstant.TRANSACTION_TOTAL, 0);
         for(int i = 1; i <= totalTransactions; ++i){
+            //Lấy ID và số tiền của giao dịch
             int transactionCategoryId = sharedPreferencesTransaction.getInt(String.format("%s_%d", SharedPrefConstant.TRANSACTION_CATEGORY_ID, i), 0);
             int transactionMoney = sharedPreferencesTransaction.getInt(String.format("%s_%d", SharedPrefConstant.TRANSACTION_MONEY, i), 0);
             if (transactionCategoryId < 20 || transactionCategoryId == 26 || transactionCategoryId == 27) {
@@ -172,15 +215,22 @@ public class StatisticActivity extends AppCompatActivity{
             } else if (transactionCategoryId >= 20) {
                 revenue = revenue + transactionMoney;
             }
-            tv_revenue.setText(Integer.toString(revenue));
-            tv_expenditure.setText(Integer.toString(expenditure));
+
+            //Đổi sang định dạng 000,000
+            DecimalFormat decimalFormat = new DecimalFormat("###,###");
+            String revenue_money = decimalFormat.format(revenue);
+            String expenditure_money = decimalFormat.format(expenditure);
+            tv_revenue.setText(revenue_money);
+            tv_expenditure.setText(expenditure_money);
         }
     }
 
     private void getRevenueExpenditureByDate (int year, int monthOfYear) throws ParseException {
+        //Lấy thông tin người dùng đăng nhập
         SharedPreferences sharedPreferencesSigningIn = getSharedPreferences(SharedPrefConstant.SIGNING_IN, MODE_PRIVATE);
         String username = sharedPreferencesSigningIn.getString(SharedPrefConstant.SIGNING_IN_USERNAME, "");
         SharedPreferences sharedPreferencesTransaction = getSharedPreferences(username, MODE_PRIVATE);
+        //Lấy tổng số giao dịch
         int totalTransactions = sharedPreferencesTransaction.getInt(SharedPrefConstant.TRANSACTION_TOTAL, 0);
         for(int i = 1; i <= totalTransactions; ++i){
             int transactionCategoryId = sharedPreferencesTransaction.getInt(String.format("%s_%d", SharedPrefConstant.TRANSACTION_CATEGORY_ID, i), 0);
@@ -196,11 +246,18 @@ public class StatisticActivity extends AppCompatActivity{
                     revenue = revenue + transactionMoney;
                 }
             }
-            tv_revenue.setText(Integer.toString(revenue));
-            tv_expenditure.setText(Integer.toString(expenditure));
+            //Đổi sang định dạng 000,000
+            DecimalFormat decimalFormat = new DecimalFormat("###,###");
+            String revenue_money = decimalFormat.format(revenue);
+            String expenditure_money = decimalFormat.format(expenditure);
+            tv_revenue.setText(revenue_money);
+            tv_expenditure.setText(expenditure_money);
         }
     }
 
+    //Truyền vào id và giá trị giao dịch,
+    // Dựa theo id để lưu  giá trị, màu, tiêu đề tương ứng
+    // vào mảng trên
     public void setRevenueItemValueColor(int id, int value) {
         switch (id) {
             case 1: expenditure_value[id-1] = expenditure_value[id-1] + value;
@@ -323,22 +380,25 @@ public class StatisticActivity extends AppCompatActivity{
 
         pc_revenue.setExtraOffsets(20.f, 0.f, 20.f, 0.f);
 
+        //Vòng tròn giữa biểu đồ
         pc_revenue.setDrawHoleEnabled(true);
         pc_revenue.setHoleColor(Color.WHITE);
-
+        //Vòng tròn mờ giữa biểu đồ
         pc_revenue.setTransparentCircleColor(Color.WHITE);
         pc_revenue.setTransparentCircleAlpha(110);
 
-        pc_revenue.setHoleRadius(40f);
-        pc_revenue.setTransparentCircleRadius(61f);
+        pc_revenue.setHoleRadius(40f); //kích thước hình tròn
+        pc_revenue.setTransparentCircleRadius(61f); // kích thước hình tròn mờ
 
-        pc_revenue.setRotationAngle(0);
+        pc_revenue.setRotationAngle(0); // góc nghiệng của biểu đồ
 
-        pc_revenue.setRotationEnabled(false);
-        pc_revenue.setHighlightPerTapEnabled(true);
-        pc_revenue.animateXY(1000,2000);
+        pc_revenue.setRotationEnabled(false); // Vô hiệu hóa xoay
+        pc_revenue.setHighlightPerTapEnabled(true); // Đạt phóng to khi chọn
+        pc_revenue.animateXY(1000,2000); // Animation hiển thị
 
-        pc_revenue.setDrawEntryLabels(false);
+        pc_revenue.setDrawEntryLabels(false); // Vô hiệu hóa mô tả trong biểu đồ
+
+        //Vô hiệu hóa phần chú thích
         Legend lg = pc_revenue.getLegend();
         lg.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         lg.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
@@ -346,43 +406,51 @@ public class StatisticActivity extends AppCompatActivity{
         lg.setDrawInside(false);
         lg.setEnabled(false);
 
-
+        //Lấy thông tin người dùng đăng nhập
         SharedPreferences sharedPreferencesSigningIn = getSharedPreferences(SharedPrefConstant.SIGNING_IN, MODE_PRIVATE);
         String username = sharedPreferencesSigningIn.getString(SharedPrefConstant.SIGNING_IN_USERNAME, "");
         SharedPreferences sharedPreferencesTransaction = getSharedPreferences(username, MODE_PRIVATE);
+        //Lấy số giao dịch
         int totalTransactions = sharedPreferencesTransaction.getInt(SharedPrefConstant.TRANSACTION_TOTAL, 0);
         for(int i = 1; i <= totalTransactions; ++i){
+            //Lấy id và giá trị của giao dịch
             int transactionCategoryId = sharedPreferencesTransaction.getInt(String.format("%s_%d", SharedPrefConstant.TRANSACTION_CATEGORY_ID, i), 0);
             int transactionMoney = sharedPreferencesTransaction.getInt(String.format("%s_%d", SharedPrefConstant.TRANSACTION_MONEY, i), 0);
             if (transactionCategoryId >= 20) {
+                //Lưu thông tin giao dịch vào mảng dựa theo id
                 setRevenueItemValueColor(transactionCategoryId, transactionMoney);
             }
         }
+
+        //Tạo list dữ liệu và màu cho chart
         ArrayList<PieEntry> revenue_entries = new ArrayList<>();
         ArrayList<Integer> colors = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
             if (revenue_value[i] != 0) {
+                //Thêm thông tin vào Arraylisst
                 revenue_entries.add(new PieEntry(revenue_value[i],revenue_title[i]));
                 colors.add(revenue_color[i]);
             }
         }
+
+        //Tạo dữ liệu cho piechart
         PieDataSet dataSet = new PieDataSet(revenue_entries, "");
-        dataSet.setSliceSpace(0f);
-        dataSet.setSelectionShift(5f);
-        dataSet.setValueTextSize(15f);
-        dataSet.setColors(colors);
-        dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+        dataSet.setSliceSpace(0f); //Khoảng cách giữa từng miếng
+        dataSet.setSelectionShift(5f); // Kích cỡ tăng khi đc chọn
+        dataSet.setValueTextSize(15f); // Kích cỡ chữ giá trị
+        dataSet.setColors(colors); // Màu cho miếng
+        dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE); //Đua phần mô tả giá trị ra ngoài
 
-        PieData revenue_pie_data = new PieData(dataSet);
+        PieData revenue_pie_data = new PieData(dataSet); //lưu giữ liệu
 
-        pc_revenue.setData(revenue_pie_data);
+        pc_revenue.setData(revenue_pie_data); // truyền dữ liệu vào chart
         pc_revenue.setOnChartValueSelectedListener(new OnChartValueSelectedListener()
         {
             @Override
             public void onValueSelected(Entry e, Highlight h)
             {
                 PieEntry pe = (PieEntry) e;
-
+                //Hiện thông tin khi nhấn vào từng miếng qua toast
                 Toast.makeText(StatisticActivity.this, "Nhóm "
                         + pe.getLabel()
                         + " có tổng "
@@ -396,6 +464,12 @@ public class StatisticActivity extends AppCompatActivity{
 
             }
         });
+        //Kiểm tra nếu dữ liệu trống thì thông báo
+        if(revenue_entries.isEmpty()) {
+            pc_revenue.setCenterText("Dữ liệu trống");
+        } else {
+            pc_revenue.setCenterText("");
+        }
     }
 
     private void setRevenuePieChartByDate (int year, int monthOfYear) throws ParseException {
@@ -407,74 +481,88 @@ public class StatisticActivity extends AppCompatActivity{
 
         pc_revenue.setExtraOffsets(20.f, 0.f, 20.f, 0.f);
 
+        //Vòng tròn giữa biểu đồ
         pc_revenue.setDrawHoleEnabled(true);
         pc_revenue.setHoleColor(Color.WHITE);
+        //Vòng tròn mờ giữa biểu đồ
 
         pc_revenue.setTransparentCircleColor(Color.WHITE);
         pc_revenue.setTransparentCircleAlpha(110);
 
-        pc_revenue.setHoleRadius(40f);
-        pc_revenue.setTransparentCircleRadius(61f);
+        pc_revenue.setHoleRadius(40f);//kích thước hình tròn
+        pc_revenue.setTransparentCircleRadius(61f); // kích thước hình tròn mờ
 
-        pc_revenue.setRotationAngle(0);
+        pc_revenue.setRotationAngle(0);// góc nghiệng của biểu đồ
 
-        pc_revenue.setRotationEnabled(false);
-        pc_revenue.setHighlightPerTapEnabled(true);
-        pc_revenue.animateXY(1000,2000);
+        pc_revenue.setRotationEnabled(false);// Vô hiệu hóa xoay
+        pc_revenue.setHighlightPerTapEnabled(true);// Đạt phóng to khi chọn
+        pc_revenue.animateXY(1000,2000);// Animation hiển thị
 
-        pc_revenue.setDrawEntryLabels(false);
+        pc_revenue.setDrawEntryLabels(false);// Vô hiệu hóa mô tả trong biểu đồ
+
+        //Vô hiệu hóa phần chú thích
         Legend lg = pc_revenue.getLegend();
         lg.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         lg.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
         lg.setOrientation(Legend.LegendOrientation.VERTICAL);
         lg.setDrawInside(false);
         lg.setEnabled(false);
+
+        //Xóa mảng dữ liệu
         for (int i = 0; i < 6; i++) {
             revenue_value[i] = 0;
         }
 
+        //Lấy thông tin người dùng đăng nhập
         SharedPreferences sharedPreferencesSigningIn = getSharedPreferences(SharedPrefConstant.SIGNING_IN, MODE_PRIVATE);
         String username = sharedPreferencesSigningIn.getString(SharedPrefConstant.SIGNING_IN_USERNAME, "");
         SharedPreferences sharedPreferencesTransaction = getSharedPreferences(username, MODE_PRIVATE);
+        //Lấy số giao dịch
         int totalTransactions = sharedPreferencesTransaction.getInt(SharedPrefConstant.TRANSACTION_TOTAL, 0);
         for(int i = 1; i <= totalTransactions; ++i){
+            //Lấy id và giá trị của giao dịch
             int transactionCategoryId = sharedPreferencesTransaction.getInt(String.format("%s_%d", SharedPrefConstant.TRANSACTION_CATEGORY_ID, i), 0);
             int transactionMoney = sharedPreferencesTransaction.getInt(String.format("%s_%d", SharedPrefConstant.TRANSACTION_MONEY, i), 0);
+            //Lấy thời gian cùa giao dịch
             String transactionDate = sharedPreferencesTransaction.getString(String.format("%s_%d", SharedPrefConstant.TRANSACTION_DATE, i), null);
             Date date =new SimpleDateFormat("dd/MM/yyyy").parse(transactionDate);
             if (transactionCategoryId >= 20) {
-                if (date.getMonth() == monthOfYear && date.getYear() == year) {
+                if (date.getMonth() == monthOfYear && date.getYear() == year) { //Kiểm gia thời gian giao dịch r lưu vào mảng
                     setRevenueItemValueColor(transactionCategoryId, transactionMoney);
                 }
             }
         }
+
+        //Tạo list dữ liệu và màu cho chart
         ArrayList<PieEntry> revenue_entries = new ArrayList<>();
-        revenue_entries.clear();
+        revenue_entries.clear(); //xóa dữ liệu cũ
         ArrayList<Integer> colors = new ArrayList<>();
-        colors.clear();
+        colors.clear();//xóa dữ liệu cũ
         for (int i = 0; i < 6; i++) {
             if (revenue_value[i] != 0) {
+                //Thêm thông tin vào Arraylisst
                 revenue_entries.add(new PieEntry(revenue_value[i],revenue_title[i]));
                 colors.add(revenue_color[i]);
             }
         }
+        //Tạo dữ liệu cho pechart
         PieDataSet dataSet = new PieDataSet(revenue_entries, "");
-        dataSet.setSliceSpace(0f);
-        dataSet.setSelectionShift(5f);
-        dataSet.setValueTextSize(15f);
-        dataSet.setColors(colors);
-        dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+        dataSet.setSliceSpace(0f);//Khoảng cách giữa từng miếng
+        dataSet.setSelectionShift(5f);// Kích cỡ tăng khi đc chọn
+        dataSet.setValueTextSize(15f); // Kích cỡ chữ giá trị
+        dataSet.setColors(colors);// Màu cho miếng
+        dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);//Đua phần mô tả giá trị ra ngoài
 
-        PieData revenue_pie_data = new PieData(dataSet);
+        PieData revenue_pie_data = new PieData(dataSet);//lưu giữ liệu
 
-        pc_revenue.setData(revenue_pie_data);
+        pc_revenue.setData(revenue_pie_data);// truyền dữ liệu vào chart
         pc_revenue.setOnChartValueSelectedListener(new OnChartValueSelectedListener()
         {
             @Override
             public void onValueSelected(Entry e, Highlight h)
             {
                 PieEntry pe = (PieEntry) e;
-
+                //Hiện thông tin khi nhấn vào từng miếng qua toast
                 Toast.makeText(StatisticActivity.this, "Nhóm "
                         + pe.getLabel()
                         + " có tổng "
@@ -488,6 +576,12 @@ public class StatisticActivity extends AppCompatActivity{
 
             }
         });
+        //Kiểm tra nếu dữ liệu trống thì thông báo
+        if(revenue_entries.isEmpty()) {
+            pc_revenue.setCenterText("Dữ liệu trống");
+        } else {
+            pc_revenue.setCenterText("");
+        }
     }
 
 
@@ -500,23 +594,26 @@ public class StatisticActivity extends AppCompatActivity{
         pc_expenditure.setDragDecelerationFrictionCoef(0.95f);
 
         pc_expenditure.setExtraOffsets(20.f, 0.f, 20.f, 0.f);
+        //Vòng tròn giữa biểu đồ
 
         pc_expenditure.setDrawHoleEnabled(true);
         pc_expenditure.setHoleColor(Color.WHITE);
+        //Vòng tròn mờ giữa biểu đồ
 
         pc_expenditure.setTransparentCircleColor(Color.WHITE);
         pc_expenditure.setTransparentCircleAlpha(110);
 
-        pc_expenditure.setHoleRadius(40f);
-        pc_expenditure.setTransparentCircleRadius(61f);
+        pc_expenditure.setHoleRadius(40f);//kích thước hình tròn
+        pc_expenditure.setTransparentCircleRadius(61f);// kích thước hình tròn mờ
 
-        pc_expenditure.setRotationAngle(0);
+        pc_expenditure.setRotationAngle(0);// góc nghiệng của biểu đồ
 
-        pc_expenditure.setRotationEnabled(false);
-        pc_expenditure.setHighlightPerTapEnabled(true);
+        pc_expenditure.setRotationEnabled(false);// Vô hiệu hóa xoay
+        pc_expenditure.setHighlightPerTapEnabled(true);// Đạt phóng to khi chọn
 
-        pc_expenditure.setDrawEntryLabels(false);
-        pc_expenditure.animateXY(1000,2000);
+        pc_expenditure.setDrawEntryLabels(false);// Vô hiệu hóa mô tả trong biểu đồ
+        pc_expenditure.animateXY(1000,2000);// Animation hiển thị
+        //Vô hiệu hóa phần chú thích
 
         Legend lg = pc_expenditure.getLegend();
         lg.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
@@ -525,41 +622,53 @@ public class StatisticActivity extends AppCompatActivity{
         lg.setDrawInside(false);
         lg.setEnabled(false);
 
+        //Lấy thông tin người dùng đăng nhập
 
         SharedPreferences sharedPreferencesSigningIn = getSharedPreferences(SharedPrefConstant.SIGNING_IN, MODE_PRIVATE);
         String username = sharedPreferencesSigningIn.getString(SharedPrefConstant.SIGNING_IN_USERNAME, "");
         SharedPreferences sharedPreferencesTransaction = getSharedPreferences(username, MODE_PRIVATE);
+        //Lấy số giao dịch
+
         int totalTransactions = sharedPreferencesTransaction.getInt(SharedPrefConstant.TRANSACTION_TOTAL, 0);
         for(int i = 1; i <= totalTransactions; ++i){
+            //Lấy id và giá trị của giao dịch
+
             int transactionCategoryId = sharedPreferencesTransaction.getInt(String.format("%s_%d", SharedPrefConstant.TRANSACTION_CATEGORY_ID, i), 0);
             int transactionMoney = sharedPreferencesTransaction.getInt(String.format("%s_%d", SharedPrefConstant.TRANSACTION_MONEY, i), 0);
             if (transactionCategoryId < 20 || transactionCategoryId == 26 || transactionCategoryId == 27) {
+                //Lưu thông tin giao dịch vào mảng dựa theo id
                 setRevenueItemValueColor(transactionCategoryId, transactionMoney);
             }
         }
-        ArrayList<PieEntry> revenue_entries = new ArrayList<>();
+        //Tạo list dữ liệu và màu cho chart
+
+        ArrayList<PieEntry> expenditure_entries = new ArrayList<>();
         ArrayList<Integer> colors = new ArrayList<>();
         for (int i = 0; i < 19; i++) {
             if (expenditure_value[i] != 0) {
-                revenue_entries.add(new PieEntry(expenditure_value[i],expenditure_title[i]));
+                //Thêm thông tin vào Arraylisst
+                expenditure_entries.add(new PieEntry(expenditure_value[i],expenditure_title[i]));
                 colors.add(expenditure_color[i]);
             }
         }
-        PieDataSet dataSet = new PieDataSet(revenue_entries, "Election Results");
-        dataSet.setSliceSpace(0f);
-        dataSet.setSelectionShift(5f);
-        dataSet.setValueTextSize(15f);
-        dataSet.setColors(colors);
-        dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+        //Tạo dữ liệu cho piechart
 
-        PieData revenue_pie_data = new PieData(dataSet);
+        PieDataSet dataSet = new PieDataSet(expenditure_entries, "Election Results");
+        dataSet.setSliceSpace(0f);//Khoảng cách giữa từng miếng
+        dataSet.setSelectionShift(5f);// Kích cỡ tăng khi đc chọn
+        dataSet.setValueTextSize(15f);// Kích cỡ chữ giá trị
+        dataSet.setColors(colors);// Màu cho miếng
+        dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);//Đua phần mô tả giá trị ra ngoài
 
-        pc_expenditure.setData(revenue_pie_data);
+        PieData revenue_pie_data = new PieData(dataSet);//lưu giữ liệu
+
+        pc_expenditure.setData(revenue_pie_data);// truyền dữ liệu vào chart
 
         pc_expenditure.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
                 PieEntry pe = (PieEntry) e;
+                //Hiện thông tin khi nhấn vào từng miếng qua toast
                 Toast.makeText(StatisticActivity.this, "Nhóm "
                         + pe.getLabel()
                         + " có tổng "
@@ -572,7 +681,13 @@ public class StatisticActivity extends AppCompatActivity{
 
             }
         });
+        //Kiểm tra nếu dữ liệu trống thì thông báo
 
+        if(expenditure_entries.isEmpty()) {
+            pc_expenditure.setCenterText("Dữ liệu trống");
+        } else {
+            pc_expenditure.setCenterText("");
+        }
     }
 
     public void setExpenditurePieChartByDate (int year, int monthOfYear) throws ParseException {
@@ -583,24 +698,27 @@ public class StatisticActivity extends AppCompatActivity{
         pc_expenditure.setDragDecelerationFrictionCoef(0.95f);
 
         pc_expenditure.setExtraOffsets(20.f, 0.f, 20.f, 0.f);
+        //Vòng tròn giữa biểu đồ
 
         pc_expenditure.setDrawHoleEnabled(true);
         pc_expenditure.setHoleColor(Color.WHITE);
+        //Vòng tròn mờ giữa biểu đồ
 
         pc_expenditure.setTransparentCircleColor(Color.WHITE);
         pc_expenditure.setTransparentCircleAlpha(110);
 
-        pc_expenditure.setHoleRadius(40f);
-        pc_expenditure.setTransparentCircleRadius(61f);
+        pc_expenditure.setHoleRadius(40f);//kích thước hình tròn
+        pc_expenditure.setTransparentCircleRadius(61f);// kích thước hình tròn mờ
 
-        pc_expenditure.setRotationAngle(0);
+        pc_expenditure.setRotationAngle(0);// góc nghiệng của biểu đồ
 
-        pc_expenditure.setRotationEnabled(false);
-        pc_expenditure.setHighlightPerTapEnabled(true);
+        pc_expenditure.setRotationEnabled(false);// Vô hiệu hóa xoay
+        pc_expenditure.setHighlightPerTapEnabled(true);// Đạt phóng to khi chọn
 
-        pc_expenditure.setDrawEntryLabels(false);
-        pc_expenditure.animateXY(1000,2000);
+        pc_expenditure.setDrawEntryLabels(false);// Vô hiệu hóa mô tả trong biểu đồ
+        pc_expenditure.animateXY(1000,2000);// Animation hiển thị
 
+        //Vô hiệu hóa phần chú thích
         Legend lg = pc_expenditure.getLegend();
         lg.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         lg.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
@@ -608,48 +726,60 @@ public class StatisticActivity extends AppCompatActivity{
         lg.setDrawInside(false);
         lg.setEnabled(false);
 
+        //Xóa mảng dữ liệu
         for (int i = 0; i < 19; i++) {
             expenditure_value[i] = 0;
         }
-
+        //Lấy thông tin người dùng đăng nhập
         SharedPreferences sharedPreferencesSigningIn = getSharedPreferences(SharedPrefConstant.SIGNING_IN, MODE_PRIVATE);
         String username = sharedPreferencesSigningIn.getString(SharedPrefConstant.SIGNING_IN_USERNAME, "");
         SharedPreferences sharedPreferencesTransaction = getSharedPreferences(username, MODE_PRIVATE);
+        //Lấy số giao dịch
         int totalTransactions = sharedPreferencesTransaction.getInt(SharedPrefConstant.TRANSACTION_TOTAL, 0);
         for(int i = 1; i <= totalTransactions; ++i){
+            //Lấy thời gian cùa giao dịch
             String transactionDate = sharedPreferencesTransaction.getString(String.format("%s_%d", SharedPrefConstant.TRANSACTION_DATE, i), null);
             Date date =new SimpleDateFormat("dd/MM/yyyy").parse(transactionDate);
+            //Lấy id và giá trị của giao dịch
             int transactionCategoryId = sharedPreferencesTransaction.getInt(String.format("%s_%d", SharedPrefConstant.TRANSACTION_CATEGORY_ID, i), 0);
             int transactionMoney = sharedPreferencesTransaction.getInt(String.format("%s_%d", SharedPrefConstant.TRANSACTION_MONEY, i), 0);
-            if (transactionCategoryId < 20 || transactionCategoryId == 26 || transactionCategoryId == 27) {
+            if (transactionCategoryId < 20 || transactionCategoryId == 26 || transactionCategoryId == 27) {//Kiểm gia thời gian giao dịch r lưu vào mảng
                 if (date.getMonth() == monthOfYear && date.getYear() == year) {
                     setRevenueItemValueColor(transactionCategoryId, transactionMoney);
                 }
             }
         }
-        ArrayList<PieEntry> revenue_entries = new ArrayList<>();
+        //Tạo list dữ liệu và màu cho chart
+        ArrayList<PieEntry> expenditure_entries = new ArrayList<>();
+        expenditure_entries.clear();//xóa dữ liệu cũ
         ArrayList<Integer> colors = new ArrayList<>();
+        colors.clear();//xóa dữ liệu cũ
         for (int i = 0; i < 19; i++) {
             if (expenditure_value[i] != 0) {
-                revenue_entries.add(new PieEntry(expenditure_value[i],expenditure_title[i]));
+                //Thêm thông tin vào Arraylisst
+                expenditure_entries.add(new PieEntry(expenditure_value[i],expenditure_title[i]));
                 colors.add(expenditure_color[i]);
             }
         }
-        PieDataSet dataSet = new PieDataSet(revenue_entries, "Election Results");
-        dataSet.setSliceSpace(0f);
-        dataSet.setSelectionShift(5f);
-        dataSet.setValueTextSize(15f);
-        dataSet.setColors(colors);
-        dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+        //Tạo dữ liệu cho pechart
 
-        PieData revenue_pie_data = new PieData(dataSet);
+        PieDataSet dataSet = new PieDataSet(expenditure_entries, "Election Results");
+        dataSet.setSliceSpace(0f);//Khoảng cách giữa từng miếng
+        dataSet.setSelectionShift(5f);// Kích cỡ tăng khi đc chọn
+        dataSet.setValueTextSize(15f);// Kích cỡ chữ giá trị
+        dataSet.setColors(colors);// Màu cho miếng
+        dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);//Đua phần mô tả giá trị ra ngoài
 
-        pc_expenditure.setData(revenue_pie_data);
+        PieData revenue_pie_data = new PieData(dataSet);//lưu giữ liệu
+
+        pc_expenditure.setData(revenue_pie_data);// truyền dữ liệu vào chart
 
         pc_expenditure.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
                 PieEntry pe = (PieEntry) e;
+                //Hiện thông tin khi nhấn vào từng miếng qua toast
+
                 Toast.makeText(StatisticActivity.this, "Nhóm "
                         + pe.getLabel()
                         + " có tổng "
@@ -662,7 +792,12 @@ public class StatisticActivity extends AppCompatActivity{
 
             }
         });
-
+        //Kiểm tra nếu dữ liệu trống thì thông báo
+        if(expenditure_entries.isEmpty()) {
+            pc_expenditure.setCenterText("Dữ liệu trống");
+        } else {
+            pc_expenditure.setCenterText("");
+        }
     }
 
     @Override
@@ -675,6 +810,7 @@ public class StatisticActivity extends AppCompatActivity{
         //=> set item được chọn trước khi set event
         SharedMethods.setNavigationMenu(bnv_menu, R.id.item_statistic);
         setEventListener();
+        displayUserInformation();
         getWalletMoney();
         getRevenueExpenditure();
         setDateLitener();
