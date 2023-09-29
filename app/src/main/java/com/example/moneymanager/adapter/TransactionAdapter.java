@@ -39,16 +39,16 @@ public class TransactionAdapter extends ArrayAdapter {
         TextView tv_date = convertView.findViewById(R.id.item_transaction_tv_date);
 
         Transaction transaction = transactions.get(position);
-        int categoryId = transaction.getCategoryId();
-        SharedMethods.setCategoryInformation(categoryId, iv_category, tv_category);
+        int transactionCategoryId = transaction.getCategoryId();
+        SharedMethods.setCategoryInformation(transactionCategoryId, iv_category, tv_category);
         tv_note.setText(transaction.getNote());
         tv_money.setText(String.valueOf(transaction.getMoney()));
 
-        if (categoryId < 20 || categoryId == 26 || categoryId == 27) {
+        if (transactionCategoryId < 20 || transactionCategoryId == 26 || transactionCategoryId == 27) {
             tv_money.setTextColor(context.getResources().getColor(R.color.red_form_error));
             tv_money.setBackgroundTintList(context.getResources().getColorStateList(R.color.design_default_color_error));
         }
-        else if (categoryId >= 20) {
+        else if (transactionCategoryId >= 20) {
             tv_money.setTextColor(context.getResources().getColor(R.color.green_main));
             tv_money.setBackgroundTintList(context.getResources().getColorStateList(R.color.green_main));
         }

@@ -131,6 +131,12 @@ public class AccountToolsFindBankDialog extends AppCompatDialogFragment {
         et_bank_name = view.findViewById(R.id.account_tools_find_bank_et_bank_name);
         builder.setView(view)
                 .setTitle("Tìm ngân hàng")
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
                 .setNeutralButton("Tìm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -143,12 +149,6 @@ public class AccountToolsFindBankDialog extends AppCompatDialogFragment {
                             mapIntent.setPackage("com.google.android.apps.maps");
                             startActivity(mapIntent);
                         }
-                    }
-                })
-                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
                     }
                 });
 

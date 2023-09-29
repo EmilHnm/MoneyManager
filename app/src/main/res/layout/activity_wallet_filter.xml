@@ -161,15 +161,16 @@
                 android:orientation="vertical">
 
                 <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="Ghi chú"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:spinnerMode="dropdown"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Ghi chú"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:spinnerMode="dropdown"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" android:id="@+id/wallet_filter_et_note"
+                        android:textColorHint="@color/black" android:backgroundTint="@color/grey_main"/>
 
             </LinearLayout>
         </LinearLayout>
@@ -198,7 +199,7 @@
                 android:orientation="vertical">
 
                 <Spinner
-                    android:id="@+id/wallet_filter_sp_group"
+                    android:id="@+id/wallet_filter_sp_category"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:paddingLeft="10dp"
@@ -240,14 +241,15 @@
                 android:orientation="vertical">
 
                 <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:hint="Với"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:hint="Với"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" android:id="@+id/wallet_filter_et_with"
+                        android:textColorHint="@color/black" android:backgroundTint="@color/grey_main"/>
 
             </LinearLayout>
         </LinearLayout>

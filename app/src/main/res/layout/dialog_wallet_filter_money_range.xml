@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:height="40dp"
+            android:gravity="center"
+            android:text="Từ"
+            android:textColor="@color/white"
+            android:textSize="18sp"/>
+
+    <EditText
+            android:id="@+id/wallet_filter_money_range_et_more_than"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number"
+            android:text=""
+            android:height="40dp"
+            android:gravity="center"
+            android:textSize="18sp"/>
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Đến"
+            android:textColor="@color/white"
+            android:height="40dp"
+            android:gravity="center"
+            android:textSize="18sp"/>
+
+    <EditText
+            android:id="@+id/wallet_filter_money_range_et_less_than"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number"
+            android:text="" android:gravity="center"/>
+</LinearLayout>

@@ -29,15 +29,15 @@ public class AccountSettingsChangeWalletNameDialog extends AppCompatDialogFragme
         View view = inflater.inflate(R.layout.dialog_account_settings_change_wallet_name, null);
         et_new_wallet_name = view.findViewById(R.id.account_tools_change_wallet_name_et_new_wallet_name);
         builder.setView(view)
-                .setNeutralButton("Đổi tên", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                })
                 .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
+                    }
+                })
+                .setNeutralButton("Đổi tên", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                     }
                 });
         return builder.create();

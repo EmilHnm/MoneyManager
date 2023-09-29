@@ -1,17 +1,11 @@
 package com.example.moneymanager.activities;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.moneymanager.R;
@@ -19,24 +13,52 @@ import com.example.moneymanager.R;
 
 
 public class WalletFilterActivity extends AppCompatActivity{
+    private static final int MONEY_REQUEST_CODE = 1;
+    private static final int TIME_REQUEST_CODE = 2;
+
+    public static final String ALL_CATEGORY = "Tất cả";
+    public static final String INCOME_CATEGORY = "Khoản thu";
+    public static final String EXPENSE_CATEGORY = "Khoản chi";
+
+    //Key extra trả về WalletActivity
+    public static final String EXACT_MONEY_EXTRA_KEY = "exactMoney";
+    public static final String LESS_THAN_MONEY_EXTRA_KEY = "lessThanMoney";
+    public static final String MORE_THAN_MONEY_EXTRA_KEY = "moreThanMoney";
+
+    public static final String EXACT_TIME_EXTRA_KEY = "exactTime";
+    public static final String AFTER_TIME_EXTRA_KEY = "afterTime";
+    public static final String BEFORE_TIME_EXTRA_KEY = "beforeTime";
+
+    public static final String NOTE_EXTRA_KEY = "note";
+
+    public static final String CATEGORY_EXTRA_KEY = "category";
+
+    public static final String WITH_EXTRA_KEY = "with";
+
+
     ImageButton ib_back;
-    String[] rangeGroup = {"Tất cả", "Khoản chi", "Khoản thu"};
+    String[] rangeCategory = {"Tất cả", "Khoản chi", "Khoản thu"};
 
-    Spinner sp_group;
+    Spinner sp_category;
     TextView tv_range_money, tv_range_time, tv_search;
+    EditText et_note, et_with;
 
-    String group = "Tất cả",
-            at_time = "", before_time = "", after_time = "",
-            sp_money = "", sp_more_than_money = "", sp_less_than_money = "";
+
+    String category = "",
+            exact_time = "", before_time = "", after_time = "",
+            exact_money = "", more_than_money = "", less_than_money = "",
+            note = "", with = "";
 
 
 
     private void getViews() {
         tv_range_money = findViewById(R.id.wallet_filter_tv_money_range);
         tv_range_time = findViewById(R.id.wallet_filter_tv_range_time);
-        sp_group = findViewById(R.id.wallet_filter_sp_group);
+        sp_category = findViewById(R.id.wallet_filter_sp_category);
         ib_back = findViewById(R.id.add_transaction_category_ib_back);
         tv_search = findViewById(R.id.wallet_filter_tv_search);
+        et_note = findViewById(R.id.wallet_filter_et_note);
+        et_with = findViewById(R.id.wallet_filter_et_with);
     }
 
     private void setEventListener(){
@@ -50,101 +72,111 @@ public class WalletFilterActivity extends AppCompatActivity{
         tv_range_money.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(WalletFilterActivity.this,WalletFilterChooseMoneyRangeActivity.class);
-                startActivityForResult(intent,1);
+                Intent intent = new Intent(WalletFilterActivity.this, WalletFilterMoneyActivity.class);
+                startActivityForResult(intent, MONEY_REQUEST_CODE);
             }
         });
         tv_range_time.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(WalletFilterActivity.this,WalletFilterChooseTimeRangeActivity.class);
-                startActivityForResult(intent,2);
+                Intent intent = new Intent(WalletFilterActivity.this, WalletFilterTimeActivity.class);
+                startActivityForResult(intent, TIME_REQUEST_CODE);
             }
         });
         tv_search.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intentBackWallet = new Intent();
-                intentBackWallet.putExtra("at_time",at_time);
-                intentBackWallet.putExtra("before_time",before_time);
-                intentBackWallet.putExtra("after_time",after_time);
-                intentBackWallet.putExtra("sp_money",sp_money);
-                intentBackWallet.putExtra("sp_more_than_money",sp_more_than_money);
-                intentBackWallet.putExtra("sp_less_than_money",sp_less_than_money);
-                intentBackWallet.putExtra("group",group);
-                setResult(1,intentBackWallet);
+                //Gửi dữ liệu filter về WalletActivity
+                Intent intentBackWallet = new Intent(WalletFilterActivity.this, WalletActivity.class);
+                note = et_note.getText().toString();
+                with = et_with.getText().toString();
+
+                intentBackWallet.putExtra(EXACT_TIME_EXTRA_KEY, exact_time);
+                intentBackWallet.putExtra(BEFORE_TIME_EXTRA_KEY, before_time);
+                intentBackWallet.putExtra(AFTER_TIME_EXTRA_KEY, after_time);
+                intentBackWallet.putExtra(EXACT_MONEY_EXTRA_KEY, exact_money);
+                intentBackWallet.putExtra(MORE_THAN_MONEY_EXTRA_KEY, more_than_money);
+                intentBackWallet.putExtra(LESS_THAN_MONEY_EXTRA_KEY, less_than_money);
+                intentBackWallet.putExtra(NOTE_EXTRA_KEY, note);
+                intentBackWallet.putExtra(CATEGORY_EXTRA_KEY, category);
+                intentBackWallet.putExtra(WITH_EXTRA_KEY, with);
+                setResult(RESULT_OK, intentBackWallet);
                 finish();
+                overridePendingTransition(0,0);
+
             }
         });
     }
 
-    public void getActivityResultMoney(int resultCode,Intent data) {
+    //Hàm xử lý dữ kiệu trả về từ trang WalletFilterMoneyActivity
+    public void getActivityResultMoney(int resultCode, Intent data) {
         switch (resultCode) {
-            case 0: {
-                sp_more_than_money = "";
-                sp_money = "";
-                sp_less_than_money = "";
+            case WalletFilterMoneyActivity.ALL_MONEY_RESULT_CODE:
+                more_than_money = "";
+                exact_money = "";
+                less_than_money = "";
                 tv_range_money.setText("Tất cả");
-            } break;
-            case 1: {
-                sp_less_than_money = "";
-                sp_money = "";
-                sp_more_than_money = data.getStringExtra("result");
-                tv_range_money.setText("Lớn hơn " + sp_more_than_money + "đ");
-            }break;
-            case 2: {
-                sp_more_than_money = "";
-                sp_money = "";
-                sp_less_than_money = data.getStringExtra("result");
-                tv_range_money.setText("Nhỏ hơn " + sp_less_than_money + "đ");
-            }break;
-            case 3: {
-                sp_money = "";
-                sp_more_than_money =data.getStringExtra("moreThan");
-                sp_less_than_money = data.getStringExtra("lessThan");
-                tv_range_money.setText("Từ " + sp_more_than_money + "đ đến " + sp_less_than_money + "đ");
-            }break;
-            case 4:{
-                sp_less_than_money = "";
-                sp_more_than_money = "";
-                sp_money = data.getStringExtra("result");
-                tv_range_money.setText(sp_more_than_money + "đ");
-            } break;
+                break;
+            case WalletFilterMoneyActivity.MORE_THAN_MONEY_RESULT_CODE:
+                less_than_money = "";
+                exact_money = "";
+                more_than_money = data.getStringExtra(WalletFilterMoneyActivity.MORE_THAN_MONEY_EXTRA_KEY);
+                tv_range_money.setText("Lớn hơn " + more_than_money + "đ");
+                break;
+            case WalletFilterMoneyActivity.LESS_THAN_MONEY_RESULT_CODE:
+                more_than_money = "";
+                exact_money = "";
+                less_than_money = data.getStringExtra(WalletFilterMoneyActivity.LESS_THAN_MONEY_EXTRA_KEY);
+                tv_range_money.setText("Nhỏ hơn " + less_than_money + "đ");
+                break;
+            case WalletFilterMoneyActivity.IN_RANGE_MONEY_RESULT_CODE:
+                exact_money = "";
+                more_than_money = data.getStringExtra(WalletFilterMoneyActivity.MORE_THAN_MONEY_EXTRA_KEY);
+                less_than_money = data.getStringExtra(WalletFilterMoneyActivity.LESS_THAN_MONEY_EXTRA_KEY);
+                tv_range_money.setText("Từ " + more_than_money + "đ đến " + less_than_money + "đ");
+                break;
+            case WalletFilterMoneyActivity.EXACT_MONEY_RESULT_CODE:
+                less_than_money = "";
+                more_than_money = "";
+                exact_money = data.getStringExtra(WalletFilterMoneyActivity.EXACT_MONEY_EXTRA_KEY);
+                tv_range_money.setText(exact_money + "đ");
+                break;
         }
     }
 
-    public void getActivityResultTime(int resultCode,Intent data) {
+    //Hàm xử lý dữ liệu trả về từ trang WalletFilterTimeActivity
+    public void getActivityResultTime(int resultCode, Intent data) {
         switch (resultCode) {
-            case 0: {
-                at_time = "";
+            case WalletFilterTimeActivity.ALL_TIME_RESULT_CODE:
+                exact_time = "";
                 before_time = "";
                 after_time = "";
                 tv_range_time.setText("Tất cả");
-            } break;
-            case 1: {
-                at_time = "";
+                break;
+            case WalletFilterTimeActivity.AFTER_TIME_RESULT_CODE:
+                exact_time = "";
                 before_time = "";
-                after_time = data.getStringExtra("result");
-                tv_range_time.setText("Sau " + sp_more_than_money + "đ");
-            }break;
-            case 2: {
+                after_time = data.getStringExtra(WalletFilterTimeActivity.AFTER_TIME_EXTRA_KEY);
+                tv_range_time.setText("Sau " + after_time);
+                break;
+            case WalletFilterTimeActivity.BEFORE_TIME_RESULT_CODE:
                 after_time = "";
-                at_time = "";
-                before_time = data.getStringExtra("result");
-                tv_range_time.setText("Trước " + before_time + "đ");
-            }break;
-            case 3: {
-                at_time = "";
-                before_time =data.getStringExtra("before");
-                after_time = data.getStringExtra("after");
+                exact_time = "";
+                before_time = data.getStringExtra(WalletFilterTimeActivity.BEFORE_TIME_EXTRA_KEY);
+                tv_range_time.setText("Trước " + before_time);
+                break;
+            case WalletFilterTimeActivity.IN_RANGE_TIME_RESULT_CODE:
+                exact_time = "";
+                before_time = data.getStringExtra(WalletFilterTimeActivity.BEFORE_TIME_EXTRA_KEY);
+                after_time = data.getStringExtra(WalletFilterTimeActivity.AFTER_TIME_EXTRA_KEY);
                 tv_range_time.setText("Từ " + after_time + " đến " + before_time);
-            }break;
-            case 4:{
+                break;
+            case WalletFilterTimeActivity.EXACT_TIME_RESULT_CODE:
                 after_time = "";
                 before_time = "";
-                at_time = data.getStringExtra("result");
-                tv_range_time.setText(sp_more_than_money);
-            } break;
+                exact_time = data.getStringExtra(WalletFilterTimeActivity.EXACT_TIME_EXTRA_KEY);
+                tv_range_time.setText(exact_time);
+                break;
         }
     }
 
@@ -152,25 +184,29 @@ public class WalletFilterActivity extends AppCompatActivity{
     protected void onActivityResult(int requestCode, int resultCode,Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case 1: getActivityResultMoney(resultCode,data); break;
-            case 2: getActivityResultTime(resultCode,data); break;
+            case MONEY_REQUEST_CODE:
+                getActivityResultMoney(resultCode,data);
+                break;
+            case TIME_REQUEST_CODE:
+                getActivityResultTime(resultCode,data);
+                break;
         }
     }
 
     public void getSpinner() {
-        ArrayAdapter<String> adapterGroup = new ArrayAdapter<String>(WalletFilterActivity.this,
-                R.layout.spinner_wallet_filter, rangeGroup);
-        adapterGroup.setDropDownViewResource(R.layout.spinner_wallet_filter_dropdown);
-        sp_group.setAdapter(adapterGroup);
-        sp_group.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        ArrayAdapter<String> adapterCategory = new ArrayAdapter<String>(WalletFilterActivity.this,
+                R.layout.spinner_wallet_filter, rangeCategory);
+        adapterCategory.setDropDownViewResource(R.layout.spinner_wallet_filter_dropdown);
+        sp_category.setAdapter(adapterCategory);
+        sp_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
-                    case 0: group = "Tất cả";
+                    case 0: category = ALL_CATEGORY;
                         break;
-                    case 1: group = "Khoản chi";
+                    case 1: category = EXPENSE_CATEGORY;
                         break;
-                    case 2: group = "khoản thu";
+                    case 2: category = INCOME_CATEGORY;
                         break;
                 }
             }

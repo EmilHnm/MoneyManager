@@ -20,7 +20,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/wallet_filter_choose_time_range_after"
+        android:id="@+id/wallet_filter_time_range_after"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -41,7 +41,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/wallet_filter_choose_time_range_before"
+        android:id="@+id/wallet_filter_time_range_before"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

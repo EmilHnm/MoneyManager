@@ -131,6 +131,12 @@ public class AccountToolsFindAtmDialog extends AppCompatDialogFragment {
         et_atm_name = view.findViewById(R.id.account_tools_find_atm_et_atm_name);
         builder.setView(view)
                 .setTitle("Tìm ATM")
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
                 .setNeutralButton("Tìm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -142,12 +148,6 @@ public class AccountToolsFindAtmDialog extends AppCompatDialogFragment {
                             mapIntent.setPackage("com.google.android.apps.maps");
                             startActivity(mapIntent);
                         }
-                    }
-                })
-                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
                     }
                 });
 

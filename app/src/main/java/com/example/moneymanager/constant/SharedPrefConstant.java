@@ -28,12 +28,20 @@ public class SharedPrefConstant {
     //Tên file = tên username định nghĩa trong AddTransactionActivity.java
     //Các giá trị sẽ lưu trong file
     public static final String TRANSACTION_TOTAL = "totalTransaction";
-    public static final String TRANSACTION_ID = "id";
-    public static final String TRANSACTION_CATEGORY_ID = "categoryId";
-    public static final String TRANSACTION_MONEY = "money";
-    public static final String TRANSACTION_DATE = "date";
-    public static final String TRANSACTION_NOTE = "note";
+    public static final String TRANSACTION_ID = "transactionId";
+    public static final String TRANSACTION_CATEGORY_ID = "transactionCategoryId";
+    public static final String TRANSACTION_MONEY = "transactionMoney";
+    public static final String TRANSACTION_DATE = "transactionDate";
+    public static final String TRANSACTION_NOTE = "transactionNote";
+    public static final String TRANSACTION_WITH = "transactionWith";
     public static final String WALLET_MONEY = "walletMoney";
+    public static final String WALLET_MONEY_DEFAULT = "walletMoneyDefault";
     public static final String WALLET_IS_SET_MONEY = "walletIsSetMoney";
+
+    public static final String EVENT_ID = "eventId";
+    public static final String EVENT_CATEGORY_ID = "eventCategoryId";
+    public static final String EVENT_MONEY = "eventMoney";
+    public static final String EVENT_DATE = "eventDate";
+    public static final String EVENT_NOTE = "eventNote";
 }
 

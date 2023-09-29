@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" android:paddingTop="5dp" android:paddingBottom="5dp">
+
+        <ImageButton
+                android:id="@+id/plan_event_ib_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                app:srcCompat="@drawable/ic_arrow_back"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:shadowColor="#00000000"
+                android:text="Giao dịch tương lai"
+                android:textColor="@color/black"
+                android:textSize="24sp"/>
+
+    </LinearLayout>
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp" android:id="@+id/view2" android:background="@color/black"/>
+    <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:background="@color/grey_list" android:layout_weight="1"
+            android:id="@+id/plan_event_lv_event"/>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <com.google.android.material.bottomappbar.BottomAppBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
+                android:layout_gravity="bottom"
+                android:id="@+id/bottomAppBar"
+                android:backgroundTint="#FFFFFF"
+                app:fabCradleMargin="-20dp">
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" android:layout_marginRight="18dp"
+                    android:id="@+id/plan_event_bnv_menu"
+                    app:menu="@menu/menu_bottom_navigation" app:itemIconTint="@color/green_main"
+                    app:itemTextColor="@color/green_main"/>
+
+        </com.google.android.material.bottomappbar.BottomAppBar>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/plan_event_fab_add_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:backgroundTint="@color/green_floating"
+                app:fabCustomSize="48dp"
+                app:srcCompat="@android:drawable/ic_input_add"
+                app:tint="@color/white"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

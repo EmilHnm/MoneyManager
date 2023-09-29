@@ -50,7 +50,7 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/add_transaction_et_add_money"
+                android:id="@+id/add_transaction_et_money"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="60dp"
@@ -79,7 +79,7 @@
                         app:srcCompat="@drawable/ic_question_mark" />
 
                     <TextView
-                        android:id="@+id/add_transaction_tv_add_category"
+                        android:id="@+id/add_transaction_tv_category"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -109,7 +109,7 @@
                         app:srcCompat="@drawable/ic_today" />
 
                     <TextView
-                        android:id="@+id/add_transaction_tv_add_date"
+                        android:id="@+id/add_transaction_tv_date"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -139,7 +139,7 @@
                         app:srcCompat="@drawable/ic_account_balance_wallet" />
 
                     <TextView
-                        android:id="@+id/add_transaction_tv_add_wallet"
+                        android:id="@+id/add_transaction_tv_wallet"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -167,7 +167,7 @@
                         app:srcCompat="@drawable/ic_notes" />
 
                     <EditText
-                        android:id="@+id/add_transaction_et_add_note"
+                        android:id="@+id/add_transaction_et_note"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -208,7 +208,7 @@
                         app:srcCompat="@drawable/ic_people" />
 
                     <EditText
-                        android:id="@+id/add_transaction_et_add_person"
+                        android:id="@+id/add_transaction_et_with"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -228,73 +228,73 @@
                 android:background="@color/grey_line_dark" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="15dp"
-                    android:orientation="horizontal">
+                    android:orientation="vertical" android:visibility="invisible">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="15dp"
+                        android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/imageView6"
-                        android:layout_width="60dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        app:srcCompat="@drawable/ic_today" />
+                            android:id="@+id/imageView6"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            app:srcCompat="@drawable/ic_today"/>
 
                     <EditText
-                        android:id="@+id/add_transaction_et_add_event"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/grey_main"
-                        android:ems="10"
-                        android:hint="Chọn sự kiện"
-                        android:inputType="textPersonName"
-                        android:textColor="@color/black"
-                        android:textColorHint="@color/black" />
+                            android:id="@+id/add_transaction_et_event"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/grey_main"
+                            android:ems="10"
+                            android:hint="Chọn sự kiện"
+                            android:inputType="textPersonName"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"/>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="15dp"
-                    android:orientation="horizontal"
-                    android:paddingTop="7.5dp"
-                    android:paddingBottom="7.5dp">
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="15dp"
+                        android:orientation="horizontal"
+                        android:paddingTop="7.5dp"
+                        android:paddingBottom="7.5dp">
 
                     <ImageView
-                        android:id="@+id/imageView7"
-                        android:layout_width="60dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        app:srcCompat="@drawable/ic_alarm" />
+                            android:id="@+id/imageView7"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            app:srcCompat="@drawable/ic_alarm"/>
 
                     <TextView
-                        android:id="@+id/add_transaction_tv_add_appointment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/grey_main"
-                        android:ems="10"
-                        android:gravity="center_vertical"
-                        android:hint="Đặt lịch hẹn"
-                        android:inputType="datetime"
-                        android:paddingLeft="4dp"
-                        android:textColor="@color/black"
-                        android:textColorHint="@color/black"
-                        android:textSize="18sp" />
+                            android:id="@+id/add_transaction_tv_appointment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/grey_main"
+                            android:ems="10"
+                            android:gravity="center_vertical"
+                            android:hint="Đặt lịch hẹn"
+                            android:inputType="datetime"
+                            android:paddingLeft="4dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="18sp"/>
                 </LinearLayout>
             </LinearLayout>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="15dp"
-                android:background="@color/grey_line_dark" />
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/grey_line_dark" android:visibility="invisible"/>
 
         </LinearLayout>
     </ScrollView>

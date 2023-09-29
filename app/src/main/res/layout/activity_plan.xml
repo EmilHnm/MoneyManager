@@ -6,29 +6,285 @@
         android:layout_height="match_parent"
         android:background="@color/white" android:orientation="vertical">
 
-    <TextView
-            android:text="Plan page"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/textView14" tools:layout_editor_absoluteY="230dp"
-            tools:layout_editor_absoluteX="177dp" android:textColor="#000" android:layout_weight="1"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:paddingRight="20dp"
+            android:shadowColor="#00000000"
+            android:text="Lập kế hoạch"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        <com.google.android.material.bottomappbar.BottomAppBar
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp" android:layout_marginTop="10dp">
+
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
-                android:layout_gravity="bottom"
-                android:id="@+id/bottomAppBar"
-                android:backgroundTint="#FFFFFF"
-                app:fabCradleMargin="-20dp">
-            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:orientation="vertical" android:id="@+id/plan_ll_event">
+
+            <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:layout_marginRight="18dp"
-                    android:background="@color/white" android:id="@+id/plan_bnv_menu"
-                    app:menu="@menu/menu_bottom_navigation" app:itemIconTint="@color/green_main"
-                    app:itemTextColor="@color/green_main"/>
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="5dp">
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        app:srcCompat="@drawable/ic_today"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Sự kiện"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" android:layout_marginLeft="15dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="39dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:text="Tạo một sự kiện trong ứng dụng để theo dõi chi tiêu trong một sự kiện có thực nào đó, ví dụ như du lịch cuối tuần"
+                        android:textColor="@color/grey_main"/>
+
+                <ImageView
+                        android:id="@+id/image1"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/ic_chevron_right"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" android:id="@+id/plan_ll_recurring_transaction">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="5dp">
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        app:srcCompat="@drawable/ic_update"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_weight="1"
+                        android:text="Giao dịch định kì"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:id="@+id/textView9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="39dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:text="Tạo giao dịch các định kì sẽ được tự động thêm trong tương lai"
+                        android:textColor="@color/grey_main"/>
+
+                <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/ic_chevron_right"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" android:id="@+id/plan_ll_budget">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="5dp">
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        app:srcCompat="@drawable/ic_budget"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_weight="1"
+                        android:text="Ngân sách"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:id="@+id/de_bill"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="39dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:text="Một kế hoạch tài chính giúp bạn cân bằng được khoản thu và khoản chi của mình. Ngân sách chỉ hỗ trợ Ví cơ bản "
+                        android:textColor="@color/grey_main"/>
+
+                <ImageView
+                        android:id="@+id/image2"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/ic_chevron_right"/>
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" android:id="@+id/plan_ll_bill">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="5dp">
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        app:srcCompat="@drawable/ic_receipt_long"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_weight="1"
+                        android:text="Hóa đơn"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="39dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:text="Theo dõi hóa đơn của bạn như hóa đơn điện, nước, Internet"
+                        android:textColor="@color/grey_main"/>
+
+                <ImageView
+                        android:id="@+id/imageView4"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/ic_chevron_right"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottomAppBar"
+            style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:backgroundTint="#FFFFFF"
+            app:fabCradleMargin="-20dp">
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/plan_bnv_menu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="18dp"
+                android:background="@color/white"
+                app:itemIconTint="@color/green_main"
+                app:itemTextColor="@color/green_main"
+                app:menu="@menu/menu_bottom_navigation" />
 
         </com.google.android.material.bottomappbar.BottomAppBar>
 
@@ -41,5 +297,8 @@
             app:fabCustomSize="48dp"
             app:srcCompat="@android:drawable/ic_input_add"
             app:tint="@color/white" />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
 </LinearLayout>

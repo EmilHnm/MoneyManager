@@ -2,9 +2,9 @@ package com.example.moneymanager.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,10 +16,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class PlanActivity extends AppCompatActivity{
     BottomNavigationView bnv_menu;
     FloatingActionButton fab_add_transaction;
+    LinearLayout ll_event;
 
     private void getViews(){
         bnv_menu = findViewById(R.id.plan_bnv_menu);
         fab_add_transaction = findViewById(R.id.plan_fab_add_transaction);
+        ll_event = findViewById(R.id.plan_ll_event);
     }
 
 
@@ -58,6 +60,14 @@ public class PlanActivity extends AppCompatActivity{
                 Intent addTransactionIntent = new Intent(PlanActivity.this, AddTransactionActivity.class);
                 startActivity(addTransactionIntent);
                 overridePendingTransition(0,0);
+            }
+        });
+
+        ll_event.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent planEventIntent = new Intent(PlanActivity.this, PlanEventActivity.class);
+                startActivity(planEventIntent);
             }
         });
     }

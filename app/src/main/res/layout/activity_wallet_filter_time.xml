@@ -5,12 +5,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/white">
-    <ImageButton
-        android:id="@+id/wallet_filter_choose_time_range_ib_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FFFFFF"
-        app:srcCompat="@drawable/ic_arrow_back" />
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:gravity="center">
+        <ImageButton
+                android:id="@+id/wallet_filter_time_ib_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#FFFFFF"
+                app:srcCompat="@drawable/ic_arrow_back"/>
+        <TextView
+                android:text="Thời gian"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/textView5" android:layout_weight="1"
+                android:textColor="@color/black" android:textSize="24sp"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +33,7 @@
             android:background="@color/grey_line_light" />
 
         <TextView
-            android:id="@+id/wallet_filter_choose_time_range_tv_all"
+            android:id="@+id/wallet_filter_time_tv_all"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="20dp"
@@ -41,7 +51,7 @@
             android:background="@color/grey_line_light" />
 
         <TextView
-            android:id="@+id/wallet_filter_choose_time_range_tv_after"
+            android:id="@+id/wallet_filter_time_tv_after"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="20dp"
@@ -59,7 +69,7 @@
             android:background="@color/grey_line_light" />
 
         <TextView
-            android:id="@+id/wallet_filter_choose_time_range_tv_before"
+            android:id="@+id/wallet_filter_time_tv_before"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="20dp"
@@ -77,7 +87,7 @@
             android:background="@color/grey_line_light" />
 
         <TextView
-            android:id="@+id/wallet_filter_choose_time_range_tv_in_range"
+            android:id="@+id/wallet_filter_time_tv_in_range"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="20dp"
@@ -95,7 +105,7 @@
             android:background="@color/grey_line_light" />
 
         <TextView
-            android:id="@+id/wallet_filter_choose_time_range_tv_at"
+            android:id="@+id/wallet_filter_time_tv_exact"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="20dp"

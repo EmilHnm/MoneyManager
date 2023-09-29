@@ -8,13 +8,15 @@ public class Transaction implements Serializable {
     private int money;
     private String date;
     private String note;
+    private String with;
 
-    public Transaction(int id, int categoryId, int money, String date, String note) {
+    public Transaction(int id, int categoryId, int money, String date, String note, String with) {
         this.id = id;
         this.categoryId = categoryId;
         this.money = money;
         this.date = date;
         this.note = note;
+        this.with = with;
     }
 
     public int getId() {
@@ -55,6 +57,14 @@ public class Transaction implements Serializable {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getWith() {
+        return with;
+    }
+
+    public void setWith(String with) {
+        this.with = with;
     }
 }
 

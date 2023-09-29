@@ -29,10 +29,12 @@
         <activity android:name=".activities.SetMoneyActivity" android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity android:name=".activities.WalletActivity" android:theme="@style/Theme.MaterialComponents.NoActionBar"/>
         <activity android:name=".activities.WalletFilterActivity" android:theme="@style/Theme.MaterialComponents.NoActionBar"/>
-        <activity android:name=".activities.WalletFilterChooseMoneyRangeActivity" android:theme="@style/Theme.MaterialComponents.NoActionBar"/>
-        <activity android:name=".activities.WalletFilterChooseTimeRangeActivity" android:theme="@style/Theme.MaterialComponents.NoActionBar"/>
+        <activity android:name=".activities.WalletFilterMoneyActivity" android:theme="@style/Theme.MaterialComponents.NoActionBar"/>
+        <activity android:name=".activities.WalletFilterTimeActivity" android:theme="@style/Theme.MaterialComponents.NoActionBar"/>
         <activity android:name=".activities.StatisticActivity" android:theme="@style/Theme.MaterialComponents.NoActionBar"/>
         <activity android:name=".activities.PlanActivity" android:theme="@style/Theme.MaterialComponents.NoActionBar"/>
+        <activity android:name=".activities.PlanEventActivity" android:theme="@style/Theme.MaterialComponents.NoActionBar"/>
+        <activity android:name=".activities.PlanEventAddEventActivity" android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity android:name=".activities.AccountActivity" android:theme="@style/Theme.MaterialComponents.NoActionBar"/>
         <activity android:name=".activities.AccountMyWalletActivity" android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity android:name=".activities.AccountToolsActivity" android:theme="@style/Theme.AppCompat.NoActionBar"/>
