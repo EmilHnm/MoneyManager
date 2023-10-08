@@ -22,7 +22,7 @@ public class NavigatorActivity extends AppCompatActivity {
             //Kiểm tra xem nhập số tiền lần đầu chưa
             String username = sharedPreferencesSigningIn.getString(SharedPrefConstant.SIGNING_IN_USERNAME, "");
             SharedPreferences sharedPreferencesTransaction = getSharedPreferences(username, MODE_PRIVATE);
-            Boolean walletIsSetMoney = sharedPreferencesTransaction.getBoolean(SharedPrefConstant.WALLET_IS_SET_MONEY, false);
+            boolean walletIsSetMoney = sharedPreferencesTransaction.getBoolean(SharedPrefConstant.WALLET_IS_SET_MONEY, false);
 
             if(walletIsSetMoney){
                 Intent walletIntent = new Intent(this, WalletActivity.class);

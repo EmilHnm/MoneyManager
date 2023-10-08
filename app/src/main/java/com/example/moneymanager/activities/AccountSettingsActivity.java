@@ -14,21 +14,21 @@ import com.example.moneymanager.R;
 import com.example.moneymanager.constant.SharedPrefConstant;
 import com.example.moneymanager.dialog.AccountSettingsChangePasswordDialog;
 import com.example.moneymanager.dialog.AccountSettingsChangeWalletNameDialog;
-import com.huawei.hmf.tasks.OnCompleteListener;
-import com.huawei.hmf.tasks.OnFailureListener;
-import com.huawei.hmf.tasks.OnSuccessListener;
-import com.huawei.hmf.tasks.Task;
-import com.huawei.hms.common.ApiException;
-import com.huawei.hms.support.account.AccountAuthManager;
-import com.huawei.hms.support.account.request.AccountAuthParams;
-import com.huawei.hms.support.account.request.AccountAuthParamsHelper;
-import com.huawei.hms.support.account.service.AccountAuthService;
+//import com.huawei.hmf.tasks.OnCompleteListener;
+//import com.huawei.hmf.tasks.OnFailureListener;
+//import com.huawei.hmf.tasks.OnSuccessListener;
+//import com.huawei.hmf.tasks.Task;
+//import com.huawei.hms.common.ApiException;
+//import com.huawei.hms.support.account.AccountAuthManager;
+//import com.huawei.hms.support.account.request.AccountAuthParams;
+//import com.huawei.hms.support.account.request.AccountAuthParamsHelper;
+//import com.huawei.hms.support.account.service.AccountAuthService;
 
 public class AccountSettingsActivity extends AppCompatActivity {
     ImageButton ib_back;
     TextView tv_change_password, tv_signout, tv_change_wallet_name;
-    AccountAuthService service;
-    AccountAuthParams authParams;
+//    AccountAuthService service;
+//    AccountAuthParams authParams;
 
     private void getViews(){
         ib_back = findViewById(R.id.account_settings_ib_back);
@@ -84,79 +84,79 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 SharedPreferences sharedPreferencesSigningIn = getSharedPreferences(SharedPrefConstant.SIGNING_IN, MODE_PRIVATE);
                 SharedPreferences.Editor signingInEditor = sharedPreferencesSigningIn.edit();
                 //Check xem người dùng có phải huawei không
-                Boolean isHuawei = sharedPreferencesSigningIn.getBoolean(SharedPrefConstant.SIGNING_IN_IS_HUAWEI, false);
+//                Boolean isHuawei = sharedPreferencesSigningIn.getBoolean(SharedPrefConstant.SIGNING_IN_IS_HUAWEI, false);
 
-                if(isHuawei){
-                    //Đăng xuất huawei
-                    Task<Void> signOutTask = service.signOut();
-                    signOutTask.addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-
-                            //Nếu đăng xuất thành công thì revoke authorization
-//                            Log.i("signoutok", "signOut Success");
-//                            service.cancelAuthorization().addOnCompleteListener(new OnCompleteListener<Void>() {
+//                if(isHuawei){
+//                    //Đăng xuất huawei
+//                    Task<Void> signOutTask = service.signOut();
+//                    signOutTask.addOnSuccessListener(new OnSuccessListener<Void>() {
+//                        @Override
+//                        public void onSuccess(Void aVoid) {
+//
+//                            //Nếu đăng xuất thành công thì revoke authorization
+////                            Log.i("signoutok", "signOut Success");
+////                            service.cancelAuthorization().addOnCompleteListener(new OnCompleteListener<Void>() {
+////                                @Override
+////                                public void onComplete(Task<Void> task) {
+////                                    if (task.isSuccessful()) {
+////                                        Log.i("revokeok", "onSuccess: ");
+////                                    } else {
+////                                        Exception exception = task.getException();
+////                                        if (exception instanceof ApiException){
+////                                            int statusCode = ((ApiException) exception).getStatusCode();
+////                                            Log.i("revokefail", "onFailure: " + statusCode);
+////                                        }
+////                                    }
+////                                }
+////                            });
+//                            Toast.makeText(AccountSettingsActivity.this, "Đăng xuất thành công!", Toast.LENGTH_SHORT).show();
+//                            cancelAuthorization();
+//                            clearSigningInInformation(signingInEditor);
+//                        }
+//                    })
+//                            .addOnFailureListener(new OnFailureListener() {
 //                                @Override
-//                                public void onComplete(Task<Void> task) {
-//                                    if (task.isSuccessful()) {
-//                                        Log.i("revokeok", "onSuccess: ");
-//                                    } else {
-//                                        Exception exception = task.getException();
-//                                        if (exception instanceof ApiException){
-//                                            int statusCode = ((ApiException) exception).getStatusCode();
-//                                            Log.i("revokefail", "onFailure: " + statusCode);
-//                                        }
-//                                    }
+//                                public void onFailure(Exception e) {
+//                                    Log.i("signoutfail", "signOut fail");
+//                                    Toast.makeText(AccountSettingsActivity.this, "Đăng xuất thất bại!", Toast.LENGTH_SHORT).show();
 //                                }
 //                            });
-                            Toast.makeText(AccountSettingsActivity.this, "Đăng xuất thành công!", Toast.LENGTH_SHORT).show();
-                            cancelAuthorization();
-                            clearSigningInInformation(signingInEditor);
-                        }
-                    })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(Exception e) {
-                                    Log.i("signoutfail", "signOut fail");
-                                    Toast.makeText(AccountSettingsActivity.this, "Đăng xuất thất bại!", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                }
+//                }
                 //Nếu không phải huawei
-                else{
+//                else{
                     Toast.makeText(AccountSettingsActivity.this, "Đăng xuất thành công!", Toast.LENGTH_SHORT).show();
 
                     clearSigningInInformation(signingInEditor);
-                }
+//                }
             }
         });
     }
-    private void cancelAuthorization() {
-        authParams = new AccountAuthParamsHelper(AccountAuthParams.DEFAULT_AUTH_REQUEST_PARAM)
-                .setProfile()
-                .setAuthorizationCode()
-                .createParams();
-        service= AccountAuthManager.getService(AccountSettingsActivity.this, authParams);
-        Task<Void> task = service.cancelAuthorization();
-        task.addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.i("revokeok", "cancelAuthorization success");
-            }
-        });
-        task.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(Exception e) {
-                Log.i("revokefail", "cancelAuthorization failure：" + e.getClass().getSimpleName());
-            }
-        });
-    }
+//    private void cancelAuthorization() {
+//        authParams = new AccountAuthParamsHelper(AccountAuthParams.DEFAULT_AUTH_REQUEST_PARAM)
+//                .setProfile()
+//                .setAuthorizationCode()
+//                .createParams();
+//        service= AccountAuthManager.getService(AccountSettingsActivity.this, authParams);
+//        Task<Void> task = service.cancelAuthorization();
+//        task.addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void aVoid) {
+//                Log.i("revokeok", "cancelAuthorization success");
+//            }
+//        });
+//        task.addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(Exception e) {
+//                Log.i("revokefail", "cancelAuthorization failure：" + e.getClass().getSimpleName());
+//            }
+//        });
+//    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_settings);
         getViews();
         setEventListener();
-        service = AccountAuthManager.getService(AccountSettingsActivity.this, authParams);
+//        service = AccountAuthManager.getService(AccountSettingsActivity.this, authParams);
     }
 }

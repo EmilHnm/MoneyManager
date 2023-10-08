@@ -8,9 +8,9 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.moneymanager.R;
-import com.huawei.agconnect.config.AGConnectServicesConfig;
-import com.huawei.hms.aaid.HmsInstanceId;
-import com.huawei.hms.common.ApiException;
+//import com.huawei.agconnect.config.AGConnectServicesConfig;
+//import com.huawei.hms.aaid.HmsInstanceId;
+//import com.huawei.hms.common.ApiException;
 
 public class FirstLoadingActivity extends AppCompatActivity {
     static final String ACTIVITY_NAME = "FirstLoadingActivity";
@@ -49,28 +49,28 @@ public class FirstLoadingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_first_loading);
         getViews();
         setEventListener();
-        getToken();
+//        getToken();
     }
-    private void getToken(){
-        new Thread(){
-            public void run(){
-                try{
-                    String appID= AGConnectServicesConfig.fromContext(FirstLoadingActivity.this).getString("client/app_id");
-                    String tokenScope="HCM";
-                    String token= HmsInstanceId.getInstance(FirstLoadingActivity.this).getToken(appID,tokenScope);
-                    Log.i("token","get token: "+token);
-                    if(!TextUtils.isEmpty(token)){
-                        sendRegTokenToServer(token);
-
-                    }
-
-                }catch(ApiException e){
-                    Log.e("tokenfail","get token failed"+ e);
-
-                }
-            }
-        }.start();
-    }
+//    private void getToken(){
+//        new Thread(){
+//            public void run(){
+//                try{
+//                    String appID= AGConnectServicesConfig.fromContext(FirstLoadingActivity.this).getString("client/app_id");
+//                    String tokenScope="HCM";
+//                    String token= HmsInstanceId.getInstance(FirstLoadingActivity.this).getToken(appID,tokenScope);
+//                    Log.i("token","get token: "+token);
+//                    if(!TextUtils.isEmpty(token)){
+//                        sendRegTokenToServer(token);
+//
+//                    }
+//
+//                }catch(ApiException e){
+//                    Log.e("tokenfail","get token failed"+ e);
+//
+//                }
+//            }
+//        }.start();
+//    }
     private void sendRegTokenToServer(String token) {
         Log.i("sendtoken","sending token to server"+token);
     }

@@ -1,5 +1,6 @@
 package com.example.moneymanager.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
@@ -12,14 +13,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.moneymanager.R;
 import com.example.moneymanager.constant.HuaweiConstant;
 import com.example.moneymanager.constant.SharedPrefConstant;
-import com.example.moneymanager.methods.SharedMethods;
-import com.huawei.hmf.tasks.Task;
-import com.huawei.hms.common.ApiException;
-import com.huawei.hms.support.account.AccountAuthManager;
-import com.huawei.hms.support.account.request.AccountAuthParams;
-import com.huawei.hms.support.account.request.AccountAuthParamsHelper;
-import com.huawei.hms.support.account.result.AuthAccount;
-import com.huawei.hms.support.account.service.AccountAuthService;
+//import com.example.moneymanager.methods.SharedMethods;
+//import com.huawei.hmf.tasks.Task;
+//import com.huawei.hms.common.ApiException;
+//import com.huawei.hms.support.account.AccountAuthManager;
+//import com.huawei.hms.support.account.request.AccountAuthParams;
+//import com.huawei.hms.support.account.request.AccountAuthParamsHelper;
+//import com.huawei.hms.support.account.result.AuthAccount;
+//import com.huawei.hms.support.account.service.AccountAuthService;
 
 public class SignupActivity extends AppCompatActivity {
     public static final String ACTIVITY_NAME = "SignupActivity";
@@ -29,8 +30,8 @@ public class SignupActivity extends AppCompatActivity {
     TextView tv_signin, tv_error_username, tv_error_email, tv_error_password, tv_error_repassword;
     EditText et_username, et_email, et_password, et_repassword;
     LinearLayout ll_huawei;
-    AccountAuthParams authParams;
-    AccountAuthService service;
+//    AccountAuthParams authParams;
+//    AccountAuthService service;
 
     private void getViews(){
         ib_back = findViewById(R.id.signup_ib_back);
@@ -183,125 +184,126 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
-        ll_huawei.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                authParams = new AccountAuthParamsHelper(AccountAuthParams.DEFAULT_AUTH_REQUEST_PARAM).setAuthorizationCode().createParams();
-                service = AccountAuthManager.getService(SignupActivity.this, authParams);
-                startActivityForResult(service.getSignInIntent(), HuaweiConstant.HUAWEI_AUTHORIZATION_CODE);
-            }
-        });
+//        ll_huawei.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                authParams = new AccountAuthParamsHelper(AccountAuthParams.DEFAULT_AUTH_REQUEST_PARAM).setAuthorizationCode().createParams();
+//                service = AccountAuthManager.getService(SignupActivity.this, authParams);
+//                startActivityForResult(service.getSignInIntent(), HuaweiConstant.HUAWEI_AUTHORIZATION_CODE);
+//            }
+//        });
     }
 
 
     //Phần request code == HUAWEI_AUTHORIZATION_CODE trùng với file bên signin
     // nhớ sửa cả 2 file nếu thay đổi
+    @SuppressLint("DefaultLocale")
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         // Process the authorization result to obtain the authorization code from AuthAccount.
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == HuaweiConstant.HUAWEI_AUTHORIZATION_CODE) {
-            Task<AuthAccount> authAccountTask = AccountAuthManager.parseAuthResultFromIntent(data);
-            if (authAccountTask.isSuccessful()) {
-                // The sign-in is successful, and the user's ID information and authorization code are obtained.
-                AuthAccount authAccount = authAccountTask.getResult();
-
-                //Lấy username = unionId do nó có vẻ là duy nhất và k thay đổi
-                String username = authAccount.getUnionId();
-                //Lấy tên ví
-                String walletName = authAccount.getFamilyName() + " " + authAccount.getGivenName();
-
-                //Lấy danh sách user
-                //User được lưu dưới dạng key-value: key dạng "username_1", "password_2", .. với 1,2 là số thứ tự user
-                SharedPreferences sharedPreferencesUsersList = getSharedPreferences(SharedPrefConstant.USERS_LIST, MODE_PRIVATE);
-                SharedPreferences.Editor usersListEditor = sharedPreferencesUsersList.edit();
-
-                //Lấy tổng user
-                SharedPreferences sharedPreferencesUsersTotal = getSharedPreferences(SharedPrefConstant.USERS_TOTAL, MODE_PRIVATE);
-                SharedPreferences.Editor usersTotalEditor = sharedPreferencesUsersTotal.edit();
-                int usersTotal = sharedPreferencesUsersTotal.getInt(SharedPrefConstant.USERS_TOTAL_VALUE, 0);
-
-                //Biến kiểm tra xem có tìm được user đăng nhập với user trong danh sách không
-                boolean usernameFound = false;
-                //Check trùng username
-                for(int i=1; i<=usersTotal; ++i){
-                    if(username.equals(sharedPreferencesUsersList.getString(String.format("%s_%d", SharedPrefConstant.USER_USERNAME, i), ""))){
-                        //Lấy file lưu thông tin user đang đăng nhập
-                        SharedPreferences sharedPreferencesSigningIn = getSharedPreferences(SharedPrefConstant.SIGNING_IN, MODE_PRIVATE);
-                        SharedPreferences.Editor signingInEditor = sharedPreferencesSigningIn.edit();
-
-                        //Set status đăng nhập thành true
-                        signingInEditor.putString(SharedPrefConstant.SIGNING_IN_STATUS, SharedPrefConstant.SIGNING_IN_STATUS_VALUE);
-
-                        //Set username đăng nhập
-                        signingInEditor.putString(SharedPrefConstant.SIGNING_IN_USERNAME, username);
-
-                        //Set name đăng nhập
-                        signingInEditor.putString(SharedPrefConstant.SIGNING_IN_WALLET_NAME, walletName);
-
-                        //Set isHuawei đăng nhập
-                        signingInEditor.putBoolean(SharedPrefConstant.SIGNING_IN_IS_HUAWEI, true);
-
-                        //Lưu thay đổi file
-                        signingInEditor.apply();
-
-                        //Tìm thấy user trong danh sách
-                        usernameFound = true;
-
-                        Intent setMoneyIntent = new Intent(this, SetMoneyActivity.class);
-                        startActivity(setMoneyIntent);
-                        overridePendingTransition(0,0);
-                        finish();
-                        break;
-                    }
-                }
-                if (usernameFound == false) {
-                    //Tăng tổng user và ghi vào danh sách
-                    usersTotal++;
-                    usersTotalEditor.putString(SharedPrefConstant.USERS_TOTAL_VALUE, String.valueOf(usersTotal));
-                    usersTotalEditor.apply();
-
-                    //Lưu thông tin user
-                    usersListEditor.putString(String.format("%s_%d", SharedPrefConstant.USER_USERNAME, usersTotal), username);
-                    //Lấy luôn username làm tên ví nếu đăng ký thông thường
-                    usersListEditor.putString(String.format("%s_%d", SharedPrefConstant.USER_WALLET_NAME, usersTotal), walletName);
-                    //Có là huawei
-                    usersListEditor.putString(String.format("%s_%d", SharedPrefConstant.USER_IS_HUAWEI, usersTotal), "true");
-                    //Lưu file
-                    usersListEditor.apply();
-
-                    //Tự động đăng nhập
-
-                    //Lấy file lưu thông tin user đang đăng nhập
-                    SharedPreferences sharedPreferencesSigningIn = getSharedPreferences(SharedPrefConstant.SIGNING_IN, MODE_PRIVATE);
-                    SharedPreferences.Editor signingInEditor = sharedPreferencesSigningIn.edit();
-
-                    //Set status đăng nhập thành true
-                    signingInEditor.putString(SharedPrefConstant.SIGNING_IN_STATUS, SharedPrefConstant.SIGNING_IN_STATUS_VALUE);
-
-                    //Set username đăng nhập
-                    signingInEditor.putString(SharedPrefConstant.SIGNING_IN_USERNAME, username);
-
-                    //Set name đăng nhập
-                    signingInEditor.putString(SharedPrefConstant.SIGNING_IN_WALLET_NAME, walletName);
-
-                    //Set isHuawei đăng nhập
-                    signingInEditor.putBoolean(SharedPrefConstant.SIGNING_IN_IS_HUAWEI, true);
-
-                    //Lưu file
-                    signingInEditor.apply();
-
-
-                    Intent setMoneyIntent = new Intent(this, SetMoneyActivity.class);
-                    startActivity(setMoneyIntent);
-                    overridePendingTransition(0,0);
-                    finish();
-                }
-            } else {
-                // Đăng nhập thất bại
-                Toast.makeText(this, "Đăng nhập thất bại!", Toast.LENGTH_SHORT).show();
-            }
-        }
+//        if (requestCode == HuaweiConstant.HUAWEI_AUTHORIZATION_CODE) {
+//            Task<AuthAccount> authAccountTask = AccountAuthManager.parseAuthResultFromIntent(data);
+//            if (authAccountTask.isSuccessful()) {
+//                // The sign-in is successful, and the user's ID information and authorization code are obtained.
+//                AuthAccount authAccount = authAccountTask.getResult();
+//
+//                //Lấy username = unionId do nó có vẻ là duy nhất và k thay đổi
+//                String username = authAccount.getUnionId();
+//                //Lấy tên ví
+//                String walletName = authAccount.getFamilyName() + " " + authAccount.getGivenName();
+//
+//                //Lấy danh sách user
+//                //User được lưu dưới dạng key-value: key dạng "username_1", "password_2", .. với 1,2 là số thứ tự user
+//                SharedPreferences sharedPreferencesUsersList = getSharedPreferences(SharedPrefConstant.USERS_LIST, MODE_PRIVATE);
+//                SharedPreferences.Editor usersListEditor = sharedPreferencesUsersList.edit();
+//
+//                //Lấy tổng user
+//                SharedPreferences sharedPreferencesUsersTotal = getSharedPreferences(SharedPrefConstant.USERS_TOTAL, MODE_PRIVATE);
+//                SharedPreferences.Editor usersTotalEditor = sharedPreferencesUsersTotal.edit();
+//                int usersTotal = sharedPreferencesUsersTotal.getInt(SharedPrefConstant.USERS_TOTAL_VALUE, 0);
+//
+//                //Biến kiểm tra xem có tìm được user đăng nhập với user trong danh sách không
+//                boolean usernameFound = false;
+//                //Check trùng username
+//                for(int i=1; i<=usersTotal; ++i){
+//                    if(username.equals(sharedPreferencesUsersList.getString(String.format("%s_%d", SharedPrefConstant.USER_USERNAME, i), ""))){
+//                        //Lấy file lưu thông tin user đang đăng nhập
+//                        SharedPreferences sharedPreferencesSigningIn = getSharedPreferences(SharedPrefConstant.SIGNING_IN, MODE_PRIVATE);
+//                        SharedPreferences.Editor signingInEditor = sharedPreferencesSigningIn.edit();
+//
+//                        //Set status đăng nhập thành true
+//                        signingInEditor.putString(SharedPrefConstant.SIGNING_IN_STATUS, SharedPrefConstant.SIGNING_IN_STATUS_VALUE);
+//
+//                        //Set username đăng nhập
+//                        signingInEditor.putString(SharedPrefConstant.SIGNING_IN_USERNAME, username);
+//
+//                        //Set name đăng nhập
+//                        signingInEditor.putString(SharedPrefConstant.SIGNING_IN_WALLET_NAME, walletName);
+//
+//                        //Set isHuawei đăng nhập
+//                        signingInEditor.putBoolean(SharedPrefConstant.SIGNING_IN_IS_HUAWEI, true);
+//
+//                        //Lưu thay đổi file
+//                        signingInEditor.apply();
+//
+//                        //Tìm thấy user trong danh sách
+//                        usernameFound = true;
+//
+//                        Intent setMoneyIntent = new Intent(this, SetMoneyActivity.class);
+//                        startActivity(setMoneyIntent);
+//                        overridePendingTransition(0,0);
+//                        finish();
+//                        break;
+//                    }
+//                }
+//                if (!usernameFound) {
+//                    //Tăng tổng user và ghi vào danh sách
+//                    usersTotal++;
+//                    usersTotalEditor.putString(SharedPrefConstant.USERS_TOTAL_VALUE, String.valueOf(usersTotal));
+//                    usersTotalEditor.apply();
+//
+//                    //Lưu thông tin user
+//                    usersListEditor.putString(String.format("%s_%d", SharedPrefConstant.USER_USERNAME, usersTotal), username);
+//                    //Lấy luôn username làm tên ví nếu đăng ký thông thường
+//                    usersListEditor.putString(String.format("%s_%d", SharedPrefConstant.USER_WALLET_NAME, usersTotal), walletName);
+//                    //Có là huawei
+//                    usersListEditor.putString(String.format("%s_%d", SharedPrefConstant.USER_IS_HUAWEI, usersTotal), "true");
+//                    //Lưu file
+//                    usersListEditor.apply();
+//
+//                    //Tự động đăng nhập
+//
+//                    //Lấy file lưu thông tin user đang đăng nhập
+//                    SharedPreferences sharedPreferencesSigningIn = getSharedPreferences(SharedPrefConstant.SIGNING_IN, MODE_PRIVATE);
+//                    SharedPreferences.Editor signingInEditor = sharedPreferencesSigningIn.edit();
+//
+//                    //Set status đăng nhập thành true
+//                    signingInEditor.putString(SharedPrefConstant.SIGNING_IN_STATUS, SharedPrefConstant.SIGNING_IN_STATUS_VALUE);
+//
+//                    //Set username đăng nhập
+//                    signingInEditor.putString(SharedPrefConstant.SIGNING_IN_USERNAME, username);
+//
+//                    //Set name đăng nhập
+//                    signingInEditor.putString(SharedPrefConstant.SIGNING_IN_WALLET_NAME, walletName);
+//
+//                    //Set isHuawei đăng nhập
+//                    signingInEditor.putBoolean(SharedPrefConstant.SIGNING_IN_IS_HUAWEI, true);
+//
+//                    //Lưu file
+//                    signingInEditor.apply();
+//
+//
+//                    Intent setMoneyIntent = new Intent(this, SetMoneyActivity.class);
+//                    startActivity(setMoneyIntent);
+//                    overridePendingTransition(0,0);
+//                    finish();
+//                }
+//            } else {
+//                // Đăng nhập thất bại
+//                Toast.makeText(this, "Đăng nhập thất bại!", Toast.LENGTH_SHORT).show();
+//            }
+//        }
     }
 
     @Override

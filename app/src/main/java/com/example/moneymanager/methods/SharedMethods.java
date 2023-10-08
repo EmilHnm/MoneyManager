@@ -1,25 +1,10 @@
 package com.example.moneymanager.methods;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.moneymanager.R;
-import com.example.moneymanager.activities.SetMoneyActivity;
-import com.example.moneymanager.activities.SigninActivity;
-import com.example.moneymanager.activities.SignupActivity;
-import com.example.moneymanager.activities.WalletActivity;
-import com.example.moneymanager.constant.HuaweiConstant;
-import com.example.moneymanager.constant.SharedPrefConstant;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.huawei.hmf.tasks.Task;
-import com.huawei.hms.support.account.AccountAuthManager;
-import com.huawei.hms.support.account.result.AuthAccount;
 
 public class SharedMethods extends AppCompatActivity {
     //Hàm sử dụng cho 4 activity trong menu
